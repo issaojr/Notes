@@ -1,13 +1,17 @@
 package edu.harvard.cs50.notes;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.DefaultItemAnimator;
+import androidx.recyclerview.widget.ItemTouchHelper;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.room.Room;
 
+import android.content.ClipData;
 import android.os.Bundle;
 import android.view.View;
+import android.widget.Toast;
 
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.snackbar.Snackbar;
@@ -43,6 +47,21 @@ public class MainActivity extends AppCompatActivity {
                 adapter.reload();
             }
         });
+
+        new ItemTouchHelper(new ItemTouchHelper.SimpleCallback(0,ItemTouchHelper.RIGHT | ItemTouchHelper.LEFT) {
+            @Override
+            public boolean onMove(@NonNull RecyclerView recyclerView, @NonNull RecyclerView.ViewHolder viewHolder, @NonNull RecyclerView.ViewHolder target) {
+                return false;
+            }
+
+            @Override
+            public void onSwiped(@NonNull RecyclerView.ViewHolder viewHolder, int direction) {
+                Note current = adapter.getNoteAt(viewHolder.getAdapterPosition());
+                database.noteDao().delete(current.id);
+                Toast.makeText(MainActivity.this, "Note deleted", Toast.LENGTH_SHORT).show();
+                adapter.reload();
+            }
+        }).attachToRecyclerView(recyclerView);
     }
 
     @Override

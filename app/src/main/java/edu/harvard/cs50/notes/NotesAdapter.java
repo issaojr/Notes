@@ -8,6 +8,7 @@ import android.view.ViewGroup;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import java.util.ArrayList;
@@ -40,6 +41,7 @@ public class NotesAdapter extends RecyclerView.Adapter<NotesAdapter.NoteViewHold
 
     private List<Note> notes = new ArrayList<>();
 
+    @NonNull
     @Override
     public NoteViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         View view = LayoutInflater.from(parent.getContext())
@@ -63,5 +65,9 @@ public class NotesAdapter extends RecyclerView.Adapter<NotesAdapter.NoteViewHold
     public void reload() {
         notes = MainActivity.database.noteDao().getAll();
         notifyDataSetChanged();
+    }
+
+    public Note getNoteAt(int position) {
+        return notes.get(position);
     }
 }
